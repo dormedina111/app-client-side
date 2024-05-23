@@ -10,23 +10,17 @@ const socket = io.connect(process.env.REACT_APP_URL);
 
 function CodeBlockPage({ codeBlocks }) {
     const { id } = useParams();
-    const [codeBlock, setCodeBlock] = useState(null);
-    const [code, setCode] = useState('');
-    const [role, setRole] = useState(null);
-    const [isSolved, setIsSolved] = useState(false); 
+    const codeBlock = codeBlocks.find(block => block.id === parseInt(id, 10));
 
+    const [code, setCode] = useState(codeBlock.code);
+    const [role, setRole] = useState(null);
+    const [isSolved, setIsSolved] = useState(false);
 
     useEffect(() => {
         socket.emit('joinRoom', id);
-        const currentCodeBlock = codeBlocks.find(block => block.id === parseInt(id, 10));
         // console.log(currentCodeBlock)
         // console.log(currentCodeBlock.code)
         // console.log(typeof(currentCodeBlock.code))
-        if (currentCodeBlock) {
-            setCodeBlock(currentCodeBlock);
-            setCode(currentCodeBlock.code);
-        }
-
 
         // Event handler for role assignment
         socket.on('roleAssigned', (assignedRole) => {
@@ -51,7 +45,7 @@ function CodeBlockPage({ codeBlocks }) {
             socket.off('codeSolved');
             socket.emit('leaveRoom', id);
         };
-    }, [id, codeBlocks]);
+    }, [id]);
 
     // Event handler for textarea value change
     const handleCodeChange = (newCode) => {
