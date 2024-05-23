@@ -5,7 +5,8 @@ import './CodeBlockPage.css';
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { vscodeDark } from "@uiw/codemirror-theme-vscode";
 
-const socket = io.connect("http://localhost:5000");
+
+const socket = io.connect(process.env.REACT_APP_URL);
 
 function CodeBlockPage({ codeBlocks }) {
     const { id } = useParams();
